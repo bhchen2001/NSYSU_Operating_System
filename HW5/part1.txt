@@ -1,0 +1,128 @@
+OS HW5 part1
+B083040012 陳柏翰
+
+1.
+    Hard Link:
+        Definition(By wikipedia):
+            Hrad Link is a directory entry that associates a name with a file on a file system.
+            All directory-based file systems must have at "least one" hard link giving the original name for each file.
+            (If there is no hard link for a file,than we can't find that file any more!)
+            -->Hard Link is like a mirror copy of original file.
+
+        Adventage of Hrad Link:
+            1.Can have the same inode and permissions of original file.
+            2.Permission will be updated when we change the permission of original file.
+            3.Can still view the context of original file ecen if the original file is removed.
+        
+    Symbolic Link:
+        Definition(By wikipedia):
+            Symbolic Link is a term for any file that contains a reference to another file or directory 
+            in the form of absolute or relative path and that affects pathname resolution.
+            -->Symbolic Link is like an actual link to a file.
+
+        Adventage of Symbolic Link:
+            1. Can cross the filesystem,allow you to link between directories.
+
+2.
+    The time takes to read file=(seek time+rotational time+transfer time)*(# of block file)
+    (1) if not put the file close to each other:
+        time to read file=(5+10+0.02)*100=1502(msec)
+    (2) if put the file close to each other:
+        time to read file=(0.1+10+0.02)*100=1022(msec)
+
+3.
+    (a) one frame:miss everytime                                        --># of page fault = 20
+        two frames:hit on (11,18)th page referance                      --># of page fault = 18
+        three frames:hit on(5,9,11,16,18)th page reference              --># of page fault = 15
+        four frames:hit on(5,6,9,10,11,15,16,17,18,19)th page referance --># of page fault = 10
+        five frames:miss on(1,2,3,4,7,8,12,13)th page reference         --># of page fault = 8
+        six frames:miss on(1,2,3,4,7,8,13)th page reference             --># of page fault = 7
+        seven frames:miss on(1,2,3,4,7,8,13)th page reference           --># of page fault = 7
+    
+    (b) one frame:miss everytime                                        --># of page fault = 20
+        two frames:hit on(6,10,11,16,18)th page reference               --># of page fault = 15
+        three frames:hit on(5,6,9,10,11,16,17,18,19)th page reference   --># of page fault = 11
+        four frames:miss on(1,2,3,4,7,8,13,14)th page reference         --># of page fault = 8
+        five frames:miss on(1,2,3,4,7,8,13)th page reference            --># of page fault = 7
+        six frames:miss on(1,2,3,4,7,8,13)th page reference             --># of page fault = 7
+        seven frames:miss on(1,2,3,4,7,8,13)th page reference           --># of page fault = 7
+
+4.
+    (a)
+        contiguous allocation:
+            100 disk I/O for reading file into memory.
+            1   disk I/O writing the new block to disk at the beginning of file.
+            100 disk I/O for writing the remaining 100 blocks to the disk.
+            -->100+1+100=201 disk I/Os
+        
+        linked allocation:
+            Let the pointer in file control block point to new block in disk.
+            -->need 1 disk I/O
+        
+        indexed allocation:
+            need 1 disk I/O to write new block to disk,then update index in memory.
+    (b)
+        contiguous allocation:
+            50  disk I/O for reading file into memory(last half part of file).
+            1   disk I/O writing the new block to disk at the middle of file.
+            50  disk I/O for writing the remaining 50 blocks to the disk.
+            -->50+1+50=101 disk I/Os
+        
+        linked allocation:
+            50  disk I/Os for reading first 50 blocks.
+            1   disk I/O for letting the point of 50th block point to new block and write 50th block back to disk.
+            1   disk I/O to write new block to the middle of file.
+            -->50+1+1=52 disk I/Os
+        
+        indexed allocation:
+            need 1 disk I/O to write new block to disk,then update index in memory.
+    (c)
+        contiguous allocation:
+            only need 1 disk I/O to write block into the end of file.
+        
+        linked allocation:
+            1   disk I/O for reading the last block.
+            1   disk I/O for change the pointer of last block(point to new block).
+            1   disk I/O for writing the new block to the end of file.
+            -->1+1+1=3 disk I/Os
+        
+        indexed allocation:
+            need 1 disk I/O to write new block to disk,then update index in memory.
+    (d)
+        contiguous allocation:
+            99  disk I/Os for reading the last 99 block of file in the memory.
+            99  disk I/Os for writing these 99 block back to disk at the beginning of file.
+            -->99+99=198 disk I/Os
+        
+        linked allocation:
+            1   disk I/O for letting the point of beginning point to the 2nd block.
+
+        indexed allocation:
+            Just update the index in the memory
+            -->0 disk I/O
+    
+    (e)
+        contiguous allocation:
+            49  disk I/Os for reading the last 49 block of file in the memory.
+            49  disk I/Os for writing thses 49 blocks back to disk at the 51th block.
+            -->49+49=98 disk I/Os
+
+        linked allocation:
+            51  disk I/Os for reading the first 51 block.
+            1   disk I/O for letting the 50th block's pointer point to 52th block(copy 51th's pointer to 50th, and done in memory).
+            -->51+1=52 disk I/Os
+
+        indexed allocation:
+            Just update the index in the memory
+            -->0 disk I/O
+
+5.
+    page size is 4096 bytes-->page offset takes 12 bits.
+    # of bit of virtual page number=page table size=32-12-20
+    
+    Turn 11123456 into binary form:
+        0001 0001 0001 0010 0011 0100 0101 0110
+    
+    first 20 bits (0001 0001 0001 0010 0011) is the displacement in the page table,eventually gets the physical page number.
+    last 12 bits (0100 0101 0110) is the displacement in the page.
+
