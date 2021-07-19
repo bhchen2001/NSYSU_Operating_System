@@ -1,0 +1,94 @@
+Part1   CSE112  B083040012  陳柏翰
+
+1.
+    How 'Test and Set Lock' work? (according to the textbook)
+        --> it reads the contents of the memory word LOCK into register RX and then stores a nonzero value at the momory address LOCK
+   
+    So in the 'enter_region' part,we can replace 'tsl' instruction as:
+
+    enter_region:
+        mov RX, 1           // store a nonzero value(1) into register RX
+        swap RX, LOCK       // set LOCK to 1 and copy LOCK to register RX
+        cmp RX,#0           // see if LOCK was zero
+        jne enter_region    // if it was nonzero,LOCK was set,so loop
+        ret                 // critical region entered
+
+    leave_region:
+        mov LOCK,#0         // store a 0 in LOCK
+        ret
+
+2.
+    CPU efficiency=(useful CPU time)/(total CPU time)
+
+    *'NO context switch' when process completed exactly the same time as the end of quantum
+    *no need to consider about the I/O problem
+
+    (a) when Q-->infinite:
+	time of context switch=1 (loading program)
+        useful CPU time=T
+        total CPU time=T+S*(time of context switch)=T+S*1
+
+        CPU efficiency=T/(T+S)
+
+    (b) when Q>T:
+	time of context switch=1
+        useful CPU time=T
+        total CPU time=T+S*(time of context switch)=T+S*1
+
+        CPU efficiency=T/(T+S)
+
+    (c) when S<Q<T:
+        time of context switch=ceil(T/Q)
+        useful CPU time=T
+        total CPU time=T+S*(time of context switch)=T+S*ceil(T/Q)
+
+        CPU efficiency=T/(T+S*ceil(T/Q))
+
+    (d) when Q=S:
+        There are two situations:
+            (1) S=Q<=T:
+                time of context switch=ceil(T/Q)
+                useful CPU time=T
+                total CPU time=T+S*(time of context switch)=T+S*ceil(T/Q)=T+S*ceil(T/S)
+
+                CPU efficiency=T/(T+S*ceil(T/S))
+                *if S(Q) divide T evenly-->CPU efficiency=T/2T=1/2=50%
+            
+	    (2)S=Q>T:
+                time of context switch:1
+                useful CPU time=T
+                total CPU time=T+S*1
+
+                CPU efficiency=T/(T+S)
+
+    (e) when Q-->0:
+        time of context switch=ceil(T/Q)
+        useful CPU time=T
+        total CPU time=T+S*(time of context switch)=T+S*ceil(T/Q)
+
+        CPU efficiency=T/(T+S*ceil(T/Q))=0%
+
+3.
+    Any order of receive() (execute by thread) will be ok
+    *thread will run immediately when 'pthread_create' executed
+    EX:
+        pthread_t A,B;
+        pthread_create(&A,NULL,receive,messageA);
+        pthread_create(&B,NULL,receive,messageB);
+        pthread_join(A,NULL);
+        pthread_join(B,NULL);
+
+    or
+
+        pthread_t A,B;
+        pthread_create(&B,NULL,receive,messageB);
+        pthread_create(&A,NULL,receive,messageA);
+        pthread_join(B,NULL);
+        pthread_join(A,NULL);
+
+4.
+    output:
+        A=1
+        B=1
+        C=2
+        D=2
