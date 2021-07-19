@@ -1,0 +1,51 @@
+OS HW4 Part1
+B083040012 陳柏翰
+
+1.
+    (a)
+        *NRU (Not Recently Used) algorithm:
+            Have two status bit: R-->page is referenced(1) or not(0) , M-->page is modified(1) or not(0).
+            According to the status bit,OS divides page fault into four categories:
+                Class 0:not referenced,not modified
+                Class 1:not referenced,modified
+                CLass 2:referenced,not modified
+                Class 3:referenced,modified
+            NRU algorithm removes a page at random from the lowest numbered nonempty class.
+        
+        -->Page 0 will be replace because of the lowest class(Class 0 due to R=0 and M=0) it has.
+    
+    (b)
+        Page 2 will be replace because it is the earliest loaded page(first in-->first out).
+
+    (c)
+        Page 1 will be replaced because it has the oldest last referenced time(least recently referenced among these pages)
+
+    (d)
+        *The Second Chance Page Replacement Algorithm:
+            Similar to FIFO algorithm but have to consider R bit at the same time.
+            (1) if R=0,the page is both old and unused,so it is replaced immediately.
+            (2) if R=1,the bit is cleared,the page put into the end of the list of pages,and its load time is updated as though it had just arrived in memory.
+        
+        -->Page 0 will be replaced because it is the earliest loaded page with R bit is 0.
+           (Page 2 is the earliest loaded page but its R bit is 1-->put into the end of the list of page.)
+2.
+    --> Page D will be replaced because it is the earliest-loaded page among the pages that having referenced bit = 0.
+
+3.
+    * Physical address is the hardware address of physical memory.
+    * Virtual address is the address viewed by program in order to (1) allow many programs to run at once (2) protected data from other program.
+    * Virtual address space usually has different size with physical adress space,according to the way virtual address mapped to physical address.
+    * Virtual address space and physical address space are independent,virtual address will be translate into physical by page table or TLB.
+
+4.
+    Clock Page Replacement Algorithm and the Second Chance Page Replacement Algorithm are essentially the same,
+    the only different is that clock algorithm present the FIFO queue into the circular form.
+    
+    -->According the information above,clock algorithm and the second chance will always choose the same page to replace.
+
+5.
+    Page 0:01101110
+    Page 1:01001001
+    Page 2:00110111
+    Page 3:10001011
+    
