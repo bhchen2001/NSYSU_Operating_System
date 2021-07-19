@@ -1,0 +1,32 @@
+OS HW3 part1
+B083040012 陳柏翰
+
+1.
+    Momery-mapped I/O is a I/O methed that by reserving the specific memory space for I/O device,
+    ranges of memory space are set aside and are mapped to the device registers,
+    so the cpu instructions that used to access the memory can also be used to access devices.
+
+2.
+    Direct Memory Access is the way of accessing main memory control independent of CPU by DMA controller,
+    it can avoid main cpu wasting time to feed data into a controller register one byte a time.
+
+    # Process to perform DMA is presenting by picture "DMA_Process.png" in folder "HW3/part1".
+    *reference:Operating System Concepts,9th Edition International Student Version
+
+3.
+    # Answer presenting by picture "Part_1-3.png" in floder "HW3/part1".
+
+4.
+    Definition(by wikipedia):
+        Subroutine:
+                    Subroutine is a sequence of program instructions that performs a specific task, packaged as a unit.
+                    It may be defined within programs, or separately in libraries that can be used by many programs. 
+                    In different programming languages, a subroutine may be called a routine, subprogram, function, method, or procedure.
+        Coroutine:
+                    Coroutines are computer program components that generalize subroutines for non-preemptive multitasking, 
+                    by allowing execution to be suspended and resumed. 
+                    Coroutines are well-suited for implementing familiar program components such as 
+                    cooperative tasks, exceptions, event loops, iterators, infinite lists and pipes.
+
+    Because when the user part of process invokes the kernel part,kernel part begin from the same place every time,
+    in other word,it's more like a "Subroutine" to be used by many other programs.
